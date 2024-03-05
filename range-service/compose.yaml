@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  database:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'range'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - "3306:3306"
+    expose:
+      - '3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: '3000'
+      DATABASE_NAME: 'range'
+      DATABASE_USERNAME: 'root'
+      DATABASE_PASSWORD: 'password'
+      DATABASE_HOST: 'database'
+      NUMBER_RANGE: '1000'
+      SECRET_KEY: 'my_secret'
+    depends_on:
+      - database
+
+volumes:
+  mysql_data:
