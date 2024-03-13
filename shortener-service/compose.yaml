@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  database:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+  cache:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      PORT: '5000'
+      DATABASE_NAME: 'tinyurl'
+      DATABASE_USERNAME: 'root'
+      DATABASE_PASSWORD: 'password'
+      DATABASE_HOST: 'database'
+      CACHE_HOST: 'cache'
+      RANGE_SERVICE_HOST: 'http://localhost:3000'
+      SECRET_KEY: 'my_secret'
+      MAX_URL_LENGTH: '6'
+    depends_on:
+      - database
+      - cache
+
+volumes:
+  mongodb_data:

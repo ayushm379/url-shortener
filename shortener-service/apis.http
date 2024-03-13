@@ -1,0 +1,11 @@
+###
+GET http://127.0.0.1:5000/redirect/long-hash
+
+
+###
+POST http://127.0.0.1:5000/short-url
+Authorization: token
+
+{
+    "url": "https://www.google.com/"
+}
